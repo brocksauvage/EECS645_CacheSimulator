@@ -7,7 +7,7 @@
 
 #define AddressSize_Exp     32
 
-#define Associativity_Exp   2
+#define Associativity_Exp   1
 #define Associativity       (1 << Associativity_Exp)
 
 #define BlockSize_Exp       6
@@ -21,23 +21,29 @@
 #define TagNbr              (1 << Tag_Exp)
 #define Tag_Mask            (TagNbr - 1)
 
-/**
-	Make a cache, with every line being invalid
-**/
-/** typedef added "clean up" code and reduce repetition of "struct" **/
+
+//
+//Struct used to represent a single line or block in a cache. Contains
+//a variable to determine it's validity, and one to hold a tag.
+//
+
 typedef struct CacheLine
 {
 	int valid;
-	char *tag;
-	char *block;
-	int set;
-	int recent;
-	int dirty;
-	int tagLength;
+	int tag;
+} CacheLine; 
 
-} CacheLine; /** struct variable **/
+//
+//Globally declared cache, as a 2D array of CacheLine (block) structs
+//
 
-CacheLine *cache;
-int hits = 0, misses = 0, hitRatio = 0;
+CacheLine cache[LineNbr][Associativity];
+
+//
+// Variables needed for cache metrics
+//
+
+double hits = 0, misses = 0;
+float hitRatio = 0;
 
 #endif
